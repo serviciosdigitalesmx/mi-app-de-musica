@@ -2,405 +2,297 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coach Vocal IA</title>
+    <title>Coach Vocal IA - Versión Simple</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0;
             padding: 20px;
         }
         .container {
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 40px;
-            max-width: 600px;
+            padding: 30px;
+            max-width: 500px;
             width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
         }
-        h1 { color: #333; text-align: center; margin-bottom: 10px; }
-        .subtitle { color: #666; text-align: center; margin-bottom: 30px; }
-        
-        /* Campo de canción */
-        .song-input {
+        h1 { text-align: center; color: #333; }
+        input, button {
             width: 100%;
-            padding: 14px;
-            border-radius: 10px;
-            border: 2px solid #e0e0e0;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
             font-size: 16px;
-            margin-bottom: 20px;
         }
-        
-        /* Botón de grabación */
-        .record-btn {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
+        button {
+            background: #667eea;
+            color: white;
             border: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             cursor: pointer;
-            margin: 0 auto 20px;
-            display: block;
-            transition: all 0.3s;
+            font-weight: bold;
+        }
+        button:hover { background: #5a67d8; }
+        button:disabled { opacity: 0.5; }
+        .record-btn {
+            background: #e53e3e;
+            font-size: 20px;
+            padding: 15px;
         }
         .record-btn.recording {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            animation: pulse 1.5s infinite;
+            animation: pulse 1s infinite;
+            background: #c53030;
         }
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
-        
-        .timer {
-            text-align: center;
-            font-size: 24px;
-            font-family: monospace;
-            margin: 10px 0;
-        }
-        
-        .analyze-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin: 20px 0;
-        }
-        .analyze-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
         .feedback {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            min-height: 150px;
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 100px;
+            margin-top: 20px;
             white-space: pre-wrap;
-            line-height: 1.6;
+            border: 1px solid #e2e8f0;
         }
-        
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        .error {
-            color: #f5576c;
-            padding: 10px;
-            background: #ffe6e6;
-            border-radius: 5px;
-            margin: 10px 0;
-            display: none;
-        }
-        
-        .warning {
-            background: #fff3cd;
-            color: #856404;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            display: none;
-        }
-        
-        .success-badge {
-            background: #28a745;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-left: 10px;
-        }
+        .loading { display: none; text-align: center; margin: 10px 0; }
+        .error { color: #e53e3e; margin: 10px 0; display: none; }
+        .timer { text-align: center; font-size: 24px; margin: 10px 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🎤 Coach Vocal IA</h1>
-        <p class="subtitle">Graba tu voz y recibe feedback profesional</p>
         
-        <input type="text" id="songName" class="song-input" placeholder="🎵 ¿Qué canción vas a cantar?" value="Mi canción favorita">
+        <input type="text" id="songName" placeholder="¿Qué canción vas a cantar?" value="dígale david bisbal">
         
-        <div style="text-align: center;">
-            <button class="record-btn" id="recordBtn">🎤</button>
-            <div class="timer" id="timer">00:00</div>
-        </div>
-
-        <button class="analyze-btn" id="analyzeBtn" disabled>
-            Analizar mi interpretación
-        </button>
-
+        <button class="record-btn" id="recordBtn">🎤 GRABAR</button>
+        <div class="timer" id="timer">00:00</div>
+        
+        <button id="analyzeBtn" disabled>🔍 ANALIZAR</button>
+        
         <div class="loading" id="loading">
-            <div class="loading-spinner"></div>
-            <p>Analizando con IA...</p>
+            <div>⏳ Analizando con Gemini...</div>
         </div>
-
+        
         <div class="error" id="error"></div>
-        <div class="warning" id="warning"></div>
-
         <div class="feedback" id="feedback">
-            👋 Graba y presiona "Analizar" para recibir consejos
+            👋 Graba y presiona ANALIZAR
         </div>
     </div>
 
     <script>
-        class VoiceRecorder {
-            constructor() {
-                // ===== IMPORTANTE: PON TU URL AQUÍ =====
-                this.APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM0ZNHOoZ9xr9GVwXXs_pOTwXEwO39heW9f_wQD_fkgxdZlYTBA2tb-1ruWciwumvEZg/exec';
-                
-                this.mediaRecorder = null;
-                this.audioChunks = [];
-                this.audioBlob = null;
-                this.recordingTime = 0;
-                this.timerInterval = null;
-                
-                this.recordBtn = document.getElementById('recordBtn');
-                this.analyzeBtn = document.getElementById('analyzeBtn');
-                this.timerElement = document.getElementById('timer');
-                this.feedbackElement = document.getElementById('feedback');
-                this.loadingElement = document.getElementById('loading');
-                this.errorElement = document.getElementById('error');
-                this.warningElement = document.getElementById('warning');
-                this.songInput = document.getElementById('songName');
-                
-                this.init();
-                
-                // Probar conexión al cargar
-                this.testConnection();
-            }
+    class VoiceRecorder {
+        constructor() {
+            // ===== TU URL EXACTA =====
+            this.APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM0ZNHOoZ9xr9GVwXXs_pOTwXEwO39heW9f_wQD_fkgxdZlYTBA2tb-1ruWciwumvEZg/exec';
+            
+            this.mediaRecorder = null;
+            this.audioChunks = [];
+            this.audioBlob = null;
+            this.recordingTime = 0;
+            this.timerInterval = null;
+            
+            this.recordBtn = document.getElementById('recordBtn');
+            this.analyzeBtn = document.getElementById('analyzeBtn');
+            this.timerElement = document.getElementById('timer');
+            this.feedbackElement = document.getElementById('feedback');
+            this.loadingElement = document.getElementById('loading');
+            this.errorElement = document.getElementById('error');
+            this.songInput = document.getElementById('songName');
+            
+            this.init();
+        }
 
-            init() {
-                this.recordBtn.addEventListener('click', () => this.toggleRecording());
-                this.analyzeBtn.addEventListener('click', () => this.analyzeAudio());
-            }
+        init() {
+            this.recordBtn.addEventListener('click', () => this.toggleRecording());
+            this.analyzeBtn.addEventListener('click', () => this.analyzeAudio());
+        }
 
-            async testConnection() {
-                try {
-                    console.log('🔍 Probando conexión con:', this.APPS_SCRIPT_URL);
-                    const response = await fetch(this.APPS_SCRIPT_URL);
-                    const text = await response.text();
-                    console.log('✅ Conexión OK:', text.substring(0, 100));
-                } catch (e) {
-                    console.error('❌ Error de conexión:', e);
-                }
-            }
-
-            async toggleRecording() {
-                if (this.mediaRecorder?.state === 'recording') {
-                    this.stopRecording();
-                } else {
-                    await this.startRecording();
-                }
-            }
-
-            async startRecording() {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        audio: {
-                            channelCount: 1,
-                            sampleRate: 16000,
-                            echoCancellation: true,
-                            noiseSuppression: true
-                        } 
-                    });
-                    
-                    this.mediaRecorder = new MediaRecorder(stream, {
-                        mimeType: 'audio/webm;codecs=opus',
-                        audioBitsPerSecond: 16000
-                    });
-                    
-                    this.audioChunks = [];
-                    this.recordingTime = 0;
-                    
-                    this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data);
-                    
-                    this.mediaRecorder.onstop = () => {
-                        this.audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
-                        this.analyzeBtn.disabled = false;
-                        stream.getTracks().forEach(t => t.stop());
-                    };
-                    
-                    this.mediaRecorder.start();
-                    this.recordBtn.classList.add('recording');
-                    this.startTimer();
-                    
-                } catch (error) {
-                    this.showError('Error al acceder al micrófono');
-                }
-            }
-
-            stopRecording() {
-                if (this.mediaRecorder?.state === 'recording') {
-                    this.mediaRecorder.stop();
-                    this.recordBtn.classList.remove('recording');
-                    this.stopTimer();
-                }
-            }
-
-            startTimer() {
-                this.timerInterval = setInterval(() => {
-                    this.recordingTime++;
-                    const minutes = Math.floor(this.recordingTime / 60);
-                    const seconds = this.recordingTime % 60;
-                    this.timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-                    
-                    if (this.recordingTime >= 30) this.stopRecording();
-                }, 1000);
-            }
-
-            stopTimer() {
-                clearInterval(this.timerInterval);
-            }
-
-            async analyzeAudio() {
-                if (!this.audioBlob) {
-                    this.showError('Primero graba algo de audio');
-                    return;
-                }
-
-                const songName = this.songInput.value.trim();
-                if (!songName) {
-                    this.showError('Escribe el nombre de la canción');
-                    return;
-                }
-
-                this.showLoading(true);
-                this.hideError();
-                this.warningElement.style.display = 'none';
-                this.feedbackElement.innerHTML = '🎵 Analizando...';
-
-                try {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(this.audioBlob);
-                    
-                    reader.onloadend = async () => {
-                        try {
-                            const base64Audio = reader.result.split(',')[1];
-                            
-                            console.log('📤 Enviando a:', this.APPS_SCRIPT_URL);
-                            console.log('📦 Datos:', { cancion: songName, tamaño: base64Audio.length });
-                            
-                            // === INTENTO 1: fetch normal ===
-                            const response = await fetch(this.APPS_SCRIPT_URL, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    audio: base64Audio,
-                                    song: songName,
-                                    type: 'audio/webm',
-                                    timestamp: new Date().toISOString(),
-                                    duration: this.recordingTime
-                                })
-                            });
-
-                            const responseText = await response.text();
-                            console.log('📥 Respuesta:', responseText.substring(0, 200));
-                            
-                            // Intentar parsear JSON
-                            try {
-                                const result = JSON.parse(responseText);
-                                if (result.success) {
-                                    this.feedbackElement.innerHTML = this.formatMarkdown(result.feedback);
-                                } else {
-                                    this.showError('Error: ' + (result.error || 'Error desconocido'));
-                                }
-                            } catch (e) {
-                                // Si no es JSON, mostrar el texto
-                                this.feedbackElement.innerHTML = responseText;
-                            }
-                            
-                        } catch (fetchError) {
-                            console.error('❌ Fetch error:', fetchError);
-                            this.showError('Error de conexión');
-                            
-                            // === INTENTO 2: método alternativo ===
-                            try {
-                                const formData = new URLSearchParams();
-                                formData.append('data', JSON.stringify({
-                                    audio: base64Audio.substring(0, 100) + '...', // Solo parte para prueba
-                                    song: songName,
-                                    type: 'test'
-                                }));
-                                
-                                const response2 = await fetch(this.APPS_SCRIPT_URL, {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                                    body: formData
-                                });
-                                
-                                const text2 = await response2.text();
-                                console.log('📥 Intento 2 respuesta:', text2);
-                                
-                            } catch (e2) {
-                                console.error('❌ Intento 2 falló:', e2);
-                            }
-                            
-                            this.warningElement.style.display = 'block';
-                            this.warningElement.innerHTML = '⚠️ <strong>Depuración:</strong><br>' +
-                                'URL: ' + this.APPS_SCRIPT_URL + '<br>' +
-                                'Verifica que: <br>' +
-                                '1. La URL termina en /exec<br>' +
-                                '2. El Web App tiene acceso "Cualquier persona"<br>' +
-                                '3. Revisa la consola (F12) para más detalles';
-                        }
-                        
-                        this.showLoading(false);
-                    };
-                    
-                } catch (error) {
-                    console.error('❌ Error general:', error);
-                    this.showError('Error: ' + error.message);
-                    this.showLoading(false);
-                }
-            }
-
-            formatMarkdown(text) {
-                if (!text) return '';
-                text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                text = text.replace(/\n/g, '<br>');
-                return text;
-            }
-
-            showLoading(show) {
-                this.loadingElement.style.display = show ? 'block' : 'none';
-                this.analyzeBtn.disabled = show;
-            }
-
-            showError(msg) {
-                this.errorElement.textContent = msg;
-                this.errorElement.style.display = 'block';
-                setTimeout(() => this.errorElement.style.display = 'none', 5000);
-            }
-
-            hideError() {
-                this.errorElement.style.display = 'none';
+        async toggleRecording() {
+            if (this.mediaRecorder?.state === 'recording') {
+                this.stopRecording();
+            } else {
+                await this.startRecording();
             }
         }
 
-        new VoiceRecorder();
+        async startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                
+                this.mediaRecorder = new MediaRecorder(stream);
+                this.audioChunks = [];
+                this.recordingTime = 0;
+                
+                this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data);
+                
+                this.mediaRecorder.onstop = () => {
+                    this.audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
+                    this.analyzeBtn.disabled = false;
+                    stream.getTracks().forEach(t => t.stop());
+                };
+                
+                this.mediaRecorder.start();
+                this.recordBtn.textContent = '⏹️ DETENER';
+                this.recordBtn.classList.add('recording');
+                this.startTimer();
+                
+            } catch (error) {
+                this.showError('Error: Permite el micrófono');
+            }
+        }
+
+        stopRecording() {
+            if (this.mediaRecorder?.state === 'recording') {
+                this.mediaRecorder.stop();
+                this.recordBtn.textContent = '🎤 GRABAR';
+                this.recordBtn.classList.remove('recording');
+                this.stopTimer();
+            }
+        }
+
+        startTimer() {
+            this.timerInterval = setInterval(() => {
+                this.recordingTime++;
+                const m = Math.floor(this.recordingTime / 60);
+                const s = this.recordingTime % 60;
+                this.timerElement.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                if (this.recordingTime >= 30) this.stopRecording();
+            }, 1000);
+        }
+
+        stopTimer() {
+            clearInterval(this.timerInterval);
+        }
+
+        async analyzeAudio() {
+            if (!this.audioBlob) {
+                this.showError('Graba algo primero');
+                return;
+            }
+
+            const songName = this.songInput.value.trim() || 'canción sin título';
+            
+            this.showLoading(true);
+            this.hideError();
+            this.feedbackElement.innerHTML = '⏳ Enviando...';
+
+            try {
+                const reader = new FileReader();
+                reader.readAsDataURL(this.audioBlob);
+                
+                reader.onloadend = async () => {
+                    const base64Audio = reader.result.split(',')[1];
+                    
+                    // ===== MÉTODO 1: JSON (el estándar) =====
+                    try {
+                        const response = await fetch(this.APPS_SCRIPT_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                audio: base64Audio,
+                                song: songName,
+                                type: 'audio/webm'
+                            })
+                        });
+                        
+                        const text = await response.text();
+                        console.log('Respuesta:', text);
+                        
+                        // Intentar parsear
+                        try {
+                            const json = JSON.parse(text);
+                            if (json.success) {
+                                this.feedbackElement.innerHTML = json.feedback || '✅ Análisis completo';
+                            } else {
+                                this.feedbackElement.innerHTML = '❌ Error: ' + (json.error || 'desconocido');
+                            }
+                        } catch {
+                            this.feedbackElement.innerHTML = text;
+                        }
+                        
+                    } catch (e1) {
+                        console.log('Método 1 falló:', e1);
+                        
+                        // ===== MÉTODO 2: FormData (más compatible) =====
+                        try {
+                            const formData = new FormData();
+                            formData.append('audio', this.audioBlob, 'grabacion.webm');
+                            formData.append('song', songName);
+                            formData.append('data', JSON.stringify({ 
+                                song: songName,
+                                type: 'fallback' 
+                            }));
+                            
+                            const response2 = await fetch(this.APPS_SCRIPT_URL, {
+                                method: 'POST',
+                                body: formData
+                            });
+                            
+                            const text2 = await response2.text();
+                            this.feedbackElement.innerHTML = '✅ Recibido (método 2): ' + text2.substring(0, 200);
+                            
+                        } catch (e2) {
+                            console.log('Método 2 falló:', e2);
+                            
+                            // ===== MÉTODO 3: URLSearchParams (último recurso) =====
+                            try {
+                                const params = new URLSearchParams();
+                                params.append('data', JSON.stringify({
+                                    song: songName,
+                                    test: 'true'
+                                }));
+                                
+                                const response3 = await fetch(this.APPS_SCRIPT_URL, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: params
+                                });
+                                
+                                const text3 = await response3.text();
+                                this.feedbackElement.innerHTML = '✅ Recibido: ' + text3;
+                                
+                            } catch (e3) {
+                                this.feedbackElement.innerHTML = '❌ Error total. Revisa consola F12';
+                                console.error('Todos los métodos fallaron:', e1, e2, e3);
+                            }
+                        }
+                    }
+                    
+                    this.showLoading(false);
+                };
+                
+            } catch (error) {
+                this.showError('Error: ' + error.message);
+                this.showLoading(false);
+            }
+        }
+
+        showLoading(show) {
+            this.loadingElement.style.display = show ? 'block' : 'none';
+            this.analyzeBtn.disabled = show;
+        }
+
+        showError(msg) {
+            this.errorElement.textContent = msg;
+            this.errorElement.style.display = 'block';
+            setTimeout(() => this.errorElement.style.display = 'none', 3000);
+        }
+
+        hideError() {
+            this.errorElement.style.display = 'none';
+        }
+    }
+
+    new VoiceRecorder();
     </script>
 </body>
 </html>
