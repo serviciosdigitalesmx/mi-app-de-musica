@@ -3,16 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coach Vocal IA - Aprende a Cantar</title>
+    <title>Coach Vocal IA</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
@@ -20,7 +15,6 @@
             align-items: center;
             padding: 20px;
         }
-
         .container {
             background: white;
             border-radius: 20px;
@@ -29,65 +23,20 @@
             max-width: 600px;
             width: 100%;
         }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            font-size: 28px;
-            text-align: center;
-        }
-
-        .subtitle {
-            color: #666;
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
-
-        /* NUEVO: Campo de canción */
-        .song-input-container {
-            margin-bottom: 25px;
-        }
-
-        .song-input-container label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
+        h1 { color: #333; text-align: center; margin-bottom: 10px; }
+        .subtitle { color: #666; text-align: center; margin-bottom: 30px; }
+        
+        /* Campo de canción */
         .song-input {
             width: 100%;
-            padding: 14px 16px;
-            border-radius: 12px;
+            padding: 14px;
+            border-radius: 10px;
             border: 2px solid #e0e0e0;
             font-size: 16px;
-            transition: all 0.3s;
-            background: #f8f9fa;
-        }
-
-        .song-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .song-input::placeholder {
-            color: #aaa;
-            font-style: italic;
-        }
-
-        .recorder-container {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
             margin-bottom: 20px;
-            position: relative;
         }
-
+        
+        /* Botón de grabación */
         .record-btn {
             width: 80px;
             height: 80px;
@@ -95,203 +44,88 @@
             border: none;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 20px;
-            position: relative;
-            z-index: 2;
+            margin: 0 auto 20px;
+            display: block;
+            transition: all 0.3s;
         }
-
-        .record-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
-        }
-
         .record-btn.recording {
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             animation: pulse 1.5s infinite;
         }
-
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
-            }
-            50% {
-                transform: scale(1.1);
-                box-shadow: 0 8px 25px rgba(245, 87, 108, 0.7);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
-            }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
-
-        .record-btn i {
-            color: white;
-            font-size: 32px;
-        }
-
-        /* NUEVO: Visualizador de ondas */
-        .visualizer {
-            width: 100%;
-            height: 60px;
-            background: rgba(0,0,0,0.05);
-            border-radius: 30px;
-            margin: 15px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        #waveform {
-            width: 100%;
-            height: 100%;
-            background: #e0e0e0;
-        }
-
+        
         .timer {
-            font-size: 18px;
-            color: #666;
-            margin-top: 10px;
+            text-align: center;
+            font-size: 24px;
             font-family: monospace;
-            font-weight: 600;
+            margin: 10px 0;
         }
-
+        
         .analyze-btn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 16px 40px;
-            border-radius: 50px;
+            padding: 15px;
+            border-radius: 10px;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
             margin: 20px 0;
-            letter-spacing: 0.5px;
         }
-
-        .analyze-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
-        }
-
         .analyze-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            background: #999;
         }
-
-        .feedback-container {
+        
+        .feedback {
             background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 20px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .feedback-container h3 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feedback-text {
-            color: #444;
-            line-height: 1.7;
-            white-space: pre-wrap;
-            font-size: 16px;
-            min-height: 150px;
-            max-height: 400px;
-            overflow-y: auto;
+            border-radius: 10px;
             padding: 20px;
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            min-height: 150px;
+            white-space: pre-wrap;
+            line-height: 1.6;
         }
-
-        /* Estilos mejorados para markdown */
-        .feedback-text strong {
-            color: #667eea;
-            font-size: 1.1em;
-        }
-
-        .feedback-text h3, .feedback-text h4 {
-            margin: 15px 0 8px 0;
-            color: #333;
-            font-weight: 600;
-        }
-
-        .feedback-text ul, .feedback-text ol {
-            margin: 10px 0 15px 25px;
-        }
-
-        .feedback-text li {
-            margin: 6px 0;
-            color: #555;
-        }
-
-        .feedback-text p {
-            margin: 10px 0;
-        }
-
+        
         .loading {
             display: none;
             text-align: center;
-            margin: 25px 0;
+            margin: 20px 0;
         }
-
         .loading-spinner {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #667eea;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 10px;
         }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .error {
             color: #f5576c;
-            font-size: 14px;
-            margin-top: 15px;
-            display: none;
-            padding: 12px;
+            padding: 10px;
             background: #ffe6e6;
-            border-radius: 8px;
-            border-left: 4px solid #f5576c;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: none;
         }
-
-        .note {
-            color: #999;
-            font-size: 12px;
-            text-align: center;
-            margin-top: 20px;
-        }
-
+        
         .warning {
             background: #fff3cd;
             color: #856404;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            margin: 15px 0;
-            border-left: 4px solid #ffc107;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
             display: none;
         }
-
+        
         .success-badge {
-            display: inline-block;
             background: #28a745;
             color: white;
             padding: 4px 8px;
@@ -304,32 +138,13 @@
 <body>
     <div class="container">
         <h1>🎤 Coach Vocal IA</h1>
-        <p class="subtitle">Graba tu voz y recibe feedback profesional al instante</p>
+        <p class="subtitle">Graba tu voz y recibe feedback profesional</p>
         
-        <!-- NUEVO: Campo para nombre de la canción -->
-        <div class="song-input-container">
-            <label for="songName">🎵 ¿Qué vas a cantar?</label>
-            <input type="text" 
-                   id="songName" 
-                   class="song-input" 
-                   placeholder="Ej: Bohemian Rhapsody - Queen, o tu canción favorita"
-                   value="Mi canción favorita">
-        </div>
+        <input type="text" id="songName" class="song-input" placeholder="🎵 ¿Qué canción vas a cantar?" value="Mi canción favorita">
         
-        <div class="recorder-container">
-            <button class="record-btn" id="recordBtn" title="Comenzar a grabar">
-                <i>🎤</i>
-            </button>
-            
-            <!-- NUEVO: Visualizador de ondas -->
-            <div class="visualizer">
-                <canvas id="waveform" width="500" height="60"></canvas>
-            </div>
-            
+        <div style="text-align: center;">
+            <button class="record-btn" id="recordBtn">🎤</button>
             <div class="timer" id="timer">00:00</div>
-            <div style="font-size: 14px; color: #999; margin-top: 5px;">
-                <span id="audioQuality">🎵 Calidad: Optimizada para IA</span>
-            </div>
         </div>
 
         <button class="analyze-btn" id="analyzeBtn" disabled>
@@ -338,39 +153,28 @@
 
         <div class="loading" id="loading">
             <div class="loading-spinner"></div>
-            <p>🎧 Analizando tu voz y contexto de la canción...</p>
-            <small style="color: #999;">Esto toma solo unos segundos</small>
-        </div>
-
-        <div class="feedback-container">
-            <h3>
-                <span>💬 Feedback de tu coach vocal</span>
-                <span class="success-badge" id="feedbackBadge" style="display: none;">Nuevo análisis</span>
-            </h3>
-            <div class="feedback-text" id="feedback">
-                👋 ¡Hola! Graba tu interpretación y presiona "Analizar" para recibir consejos profesionales personalizados.
-            </div>
+            <p>Analizando con IA...</p>
         </div>
 
         <div class="error" id="error"></div>
         <div class="warning" id="warning"></div>
-        <div class="note">* Audio optimizado para análisis con IA. Tu privacidad es importante.</div>
+
+        <div class="feedback" id="feedback">
+            👋 Graba y presiona "Analizar" para recibir consejos
+        </div>
     </div>
 
     <script>
         class VoiceRecorder {
             constructor() {
+                // ===== IMPORTANTE: PON TU URL AQUÍ =====
+                this.APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM0ZNHOoZ9xr9GVwXXs_pOTwXEwO39heW9f_wQD_fkgxdZlYTBA2tb-1ruWciwumvEZg/exec';
+                
                 this.mediaRecorder = null;
                 this.audioChunks = [];
                 this.audioBlob = null;
                 this.recordingTime = 0;
                 this.timerInterval = null;
-                this.maxDuration = 30; // segundos
-                this.audioContext = null;
-                this.analyser = null;
-                this.canvas = null;
-                this.canvasCtx = null;
-                this.animationFrame = null;
                 
                 this.recordBtn = document.getElementById('recordBtn');
                 this.analyzeBtn = document.getElementById('analyzeBtn');
@@ -379,152 +183,76 @@
                 this.loadingElement = document.getElementById('loading');
                 this.errorElement = document.getElementById('error');
                 this.warningElement = document.getElementById('warning');
-                this.feedbackBadge = document.getElementById('feedbackBadge');
                 this.songInput = document.getElementById('songName');
                 
-                // IMPORTANTE: Reemplaza con tu URL de Apps Script
-                this.APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwM0ZNHOoZ9xr9GVwXXs_pOTwXEwO39heW9f_wQD_fkgxdZlYTBA2tb-1ruWciwumvEZg/exec';
-                
                 this.init();
+                
+                // Probar conexión al cargar
+                this.testConnection();
             }
 
             init() {
                 this.recordBtn.addEventListener('click', () => this.toggleRecording());
                 this.analyzeBtn.addEventListener('click', () => this.analyzeAudio());
-                
-                // Configurar canvas para visualizador
-                this.canvas = document.getElementById('waveform');
-                this.canvasCtx = this.canvas.getContext('2d');
-                
-                // Verificar soporte del navegador
-                if (!navigator.mediaDevices || !window.MediaRecorder) {
-                    this.showError('Tu navegador no soporta grabación de audio. Usa Chrome, Firefox o Edge.');
-                    this.recordBtn.disabled = true;
+            }
+
+            async testConnection() {
+                try {
+                    console.log('🔍 Probando conexión con:', this.APPS_SCRIPT_URL);
+                    const response = await fetch(this.APPS_SCRIPT_URL);
+                    const text = await response.text();
+                    console.log('✅ Conexión OK:', text.substring(0, 100));
+                } catch (e) {
+                    console.error('❌ Error de conexión:', e);
+                }
+            }
+
+            async toggleRecording() {
+                if (this.mediaRecorder?.state === 'recording') {
+                    this.stopRecording();
+                } else {
+                    await this.startRecording();
                 }
             }
 
             async startRecording() {
                 try {
-                    // Configuración optimizada para el micrófono
                     const stream = await navigator.mediaDevices.getUserMedia({ 
                         audio: {
-                            channelCount: 1, // Mono para menor tamaño
-                            sampleRate: 16000, // Frecuencia optimizada para voz
+                            channelCount: 1,
+                            sampleRate: 16000,
                             echoCancellation: true,
-                            noiseSuppression: true,
-                            autoGainControl: true
+                            noiseSuppression: true
                         } 
                     });
                     
-                    // Configurar visualizador
-                    this.setupVisualizer(stream);
-                    
-                    // NUEVO: Configuración optimizada para MediaRecorder (menor tamaño)
-                    const options = {
+                    this.mediaRecorder = new MediaRecorder(stream, {
                         mimeType: 'audio/webm;codecs=opus',
-                        audioBitsPerSecond: 16000 // 16kbps es suficiente para análisis de voz
-                    };
-                    
-                    // Usar opciones si el navegador las soporta
-                    if (MediaRecorder.isTypeSupported(options.mimeType)) {
-                        this.mediaRecorder = new MediaRecorder(stream, options);
-                    } else {
-                        this.mediaRecorder = new MediaRecorder(stream);
-                    }
+                        audioBitsPerSecond: 16000
+                    });
                     
                     this.audioChunks = [];
                     this.recordingTime = 0;
                     
-                    this.mediaRecorder.ondataavailable = event => {
-                        this.audioChunks.push(event.data);
-                    };
+                    this.mediaRecorder.ondataavailable = e => this.audioChunks.push(e.data);
                     
                     this.mediaRecorder.onstop = () => {
                         this.audioBlob = new Blob(this.audioChunks, { type: 'audio/webm' });
                         this.analyzeBtn.disabled = false;
-                        
-                        // Mostrar tamaño del audio (debug)
-                        const sizeInKB = (this.audioBlob.size / 1024).toFixed(2);
-                        console.log(`Audio grabado: ${sizeInKB} KB`);
-                        
-                        // Detener visualizador
-                        if (this.animationFrame) {
-                            cancelAnimationFrame(this.animationFrame);
-                        }
-                        if (this.audioContext) {
-                            this.audioContext.close();
-                        }
-                        
-                        stream.getTracks().forEach(track => track.stop());
+                        stream.getTracks().forEach(t => t.stop());
                     };
                     
                     this.mediaRecorder.start();
                     this.recordBtn.classList.add('recording');
                     this.startTimer();
                     
-                    // Auto-stop después de maxDuration
-                    setTimeout(() => {
-                        if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
-                            this.stopRecording();
-                        }
-                    }, this.maxDuration * 1000);
-                    
                 } catch (error) {
-                    console.error('Error al acceder al micrófono:', error);
-                    this.showError('Error al acceder al micrófono. Permite el acceso para grabar.');
-                }
-            }
-
-            // NUEVO: Visualizador de ondas en tiempo real
-            setupVisualizer(stream) {
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.analyser = this.audioContext.createAnalyser();
-                const source = this.audioContext.createMediaStreamSource(stream);
-                source.connect(this.analyser);
-                
-                this.analyser.fftSize = 256;
-                const bufferLength = this.analyser.frequencyBinCount;
-                const dataArray = new Uint8Array(bufferLength);
-                
-                const draw = () => {
-                    this.animationFrame = requestAnimationFrame(draw);
-                    
-                    this.analyser.getByteFrequencyData(dataArray);
-                    
-                    this.canvasCtx.fillStyle = '#f0f0f0';
-                    this.canvasCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-                    
-                    const barWidth = (this.canvas.width / bufferLength) * 2.5;
-                    let x = 0;
-                    
-                    for (let i = 0; i < bufferLength; i++) {
-                        const barHeight = dataArray[i] / 2;
-                        
-                        // Gradiente según intensidad
-                        const gradient = this.canvasCtx.createLinearGradient(0, 0, 0, this.canvas.height);
-                        gradient.addColorStop(0, '#667eea');
-                        gradient.addColorStop(1, '#764ba2');
-                        
-                        this.canvasCtx.fillStyle = gradient;
-                        this.canvasCtx.fillRect(x, this.canvas.height - barHeight, barWidth, barHeight);
-                        
-                        x += barWidth + 1;
-                    }
-                };
-                
-                draw();
-            }
-
-            toggleRecording() {
-                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
-                    this.stopRecording();
-                } else {
-                    this.startRecording();
+                    this.showError('Error al acceder al micrófono');
                 }
             }
 
             stopRecording() {
-                if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                if (this.mediaRecorder?.state === 'recording') {
                     this.mediaRecorder.stop();
                     this.recordBtn.classList.remove('recording');
                     this.stopTimer();
@@ -538,9 +266,7 @@
                     const seconds = this.recordingTime % 60;
                     this.timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
                     
-                    if (this.recordingTime >= this.maxDuration) {
-                        this.stopRecording();
-                    }
+                    if (this.recordingTime >= 30) this.stopRecording();
                 }, 1000);
             }
 
@@ -550,25 +276,22 @@
 
             async analyzeAudio() {
                 if (!this.audioBlob) {
-                    this.showError('Primero debes grabar algo de audio');
+                    this.showError('Primero graba algo de audio');
                     return;
                 }
 
                 const songName = this.songInput.value.trim();
                 if (!songName) {
-                    this.showError('Por favor, escribe el nombre de la canción');
-                    this.songInput.focus();
+                    this.showError('Escribe el nombre de la canción');
                     return;
                 }
 
                 this.showLoading(true);
                 this.hideError();
                 this.warningElement.style.display = 'none';
-                this.feedbackBadge.style.display = 'none';
-                this.feedbackElement.innerHTML = '🎵 Analizando tu interpretación de "' + songName + '"...';
+                this.feedbackElement.innerHTML = '🎵 Analizando...';
 
                 try {
-                    // Convertir audio a base64
                     const reader = new FileReader();
                     reader.readAsDataURL(this.audioBlob);
                     
@@ -576,88 +299,88 @@
                         try {
                             const base64Audio = reader.result.split(',')[1];
                             
-                            // NUEVO: Incluir nombre de la canción en la petición
+                            console.log('📤 Enviando a:', this.APPS_SCRIPT_URL);
+                            console.log('📦 Datos:', { cancion: songName, tamaño: base64Audio.length });
+                            
+                            // === INTENTO 1: fetch normal ===
                             const response = await fetch(this.APPS_SCRIPT_URL, {
                                 method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
+                                headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({
                                     audio: base64Audio,
-                                    song: songName, // Enviamos el nombre de la canción
+                                    song: songName,
                                     type: 'audio/webm',
                                     timestamp: new Date().toISOString(),
                                     duration: this.recordingTime
                                 })
                             });
 
-                            // Leer la respuesta como JSON
-                            const result = await response.json();
+                            const responseText = await response.text();
+                            console.log('📥 Respuesta:', responseText.substring(0, 200));
                             
-                            if (result.success) {
-                                // Mostrar el feedback con formato markdown
-                                this.feedbackElement.innerHTML = this.formatMarkdown(result.feedback);
-                                this.feedbackBadge.style.display = 'inline-block';
-                                
-                                // Ocultar badge después de 3 segundos
-                                setTimeout(() => {
-                                    this.feedbackBadge.style.display = 'none';
-                                }, 3000);
-                            } else {
-                                this.showError('La IA no pudo procesar el audio: ' + (result.error || 'Error desconocido'));
-                                this.feedbackElement.innerHTML = '❌ Error al analizar. Intenta de nuevo.';
+                            // Intentar parsear JSON
+                            try {
+                                const result = JSON.parse(responseText);
+                                if (result.success) {
+                                    this.feedbackElement.innerHTML = this.formatMarkdown(result.feedback);
+                                } else {
+                                    this.showError('Error: ' + (result.error || 'Error desconocido'));
+                                }
+                            } catch (e) {
+                                // Si no es JSON, mostrar el texto
+                                this.feedbackElement.innerHTML = responseText;
                             }
                             
-                            this.showLoading(false);
-                            
                         } catch (fetchError) {
-                            console.error('Error en fetch:', fetchError);
-                            this.showError('Error de conexión con el servidor. Verifica la URL de Apps Script.');
-                            this.showLoading(false);
+                            console.error('❌ Fetch error:', fetchError);
+                            this.showError('Error de conexión');
+                            
+                            // === INTENTO 2: método alternativo ===
+                            try {
+                                const formData = new URLSearchParams();
+                                formData.append('data', JSON.stringify({
+                                    audio: base64Audio.substring(0, 100) + '...', // Solo parte para prueba
+                                    song: songName,
+                                    type: 'test'
+                                }));
+                                
+                                const response2 = await fetch(this.APPS_SCRIPT_URL, {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                    body: formData
+                                });
+                                
+                                const text2 = await response2.text();
+                                console.log('📥 Intento 2 respuesta:', text2);
+                                
+                            } catch (e2) {
+                                console.error('❌ Intento 2 falló:', e2);
+                            }
                             
                             this.warningElement.style.display = 'block';
-                            this.warningElement.innerHTML = '⚠️ <strong>Instrucciones de depuración:</strong><br>' +
-                                '1. Verifica que la URL de Apps Script sea correcta<br>' +
-                                '2. Asegúrate de que el Web App esté desplegado como "Cualquier persona"<br>' +
-                                '3. Revisa los logs en Apps Script (Ver → Registros)';
+                            this.warningElement.innerHTML = '⚠️ <strong>Depuración:</strong><br>' +
+                                'URL: ' + this.APPS_SCRIPT_URL + '<br>' +
+                                'Verifica que: <br>' +
+                                '1. La URL termina en /exec<br>' +
+                                '2. El Web App tiene acceso "Cualquier persona"<br>' +
+                                '3. Revisa la consola (F12) para más detalles';
                         }
+                        
+                        this.showLoading(false);
                     };
                     
                 } catch (error) {
-                    console.error('Error general:', error);
-                    this.showError('Error al analizar el audio. Intenta de nuevo.');
+                    console.error('❌ Error general:', error);
+                    this.showError('Error: ' + error.message);
                     this.showLoading(false);
-                    this.analyzeBtn.disabled = false;
                 }
             }
 
-            // Función mejorada para formatear markdown
             formatMarkdown(text) {
                 if (!text) return '';
-                
-                // Escapar HTML
-                text = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                
-                // Negritas
                 text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                
-                // Cursivas
                 text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                
-                // Listas ordenadas
-                text = text.replace(/^\d+\.\s+(.*?)$/gm, '<li>$1</li>');
-                text = text.replace(/(<li>.*?<\/li>\n?)+/g, '<ol>$&</ol>');
-                
-                // Listas no ordenadas
-                text = text.replace(/^[-•]\s+(.*?)$/gm, '<li>$1</li>');
-                text = text.replace(/(<li>.*?<\/li>\n?)+/g, '<ul>$&</ul>');
-                
-                // Títulos (##)
-                text = text.replace(/^##\s+(.*?)$/gm, '<h3>$1</h3>');
-                
-                // Saltos de línea
                 text = text.replace(/\n/g, '<br>');
-                
                 return text;
             }
 
@@ -666,14 +389,10 @@
                 this.analyzeBtn.disabled = show;
             }
 
-            showError(message) {
-                this.errorElement.textContent = message;
+            showError(msg) {
+                this.errorElement.textContent = msg;
                 this.errorElement.style.display = 'block';
-                
-                // Auto-ocultar después de 5 segundos
-                setTimeout(() => {
-                    this.errorElement.style.display = 'none';
-                }, 5000);
+                setTimeout(() => this.errorElement.style.display = 'none', 5000);
             }
 
             hideError() {
@@ -681,10 +400,7 @@
             }
         }
 
-        // Inicializar la app cuando el DOM esté listo
-        document.addEventListener('DOMContentLoaded', () => {
-            new VoiceRecorder();
-        });
+        new VoiceRecorder();
     </script>
 </body>
 </html>
